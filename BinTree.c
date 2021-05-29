@@ -1,29 +1,28 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <iostream>
 
-typedef struct Folder  //íŠ¸ë¦¬ë…¸ë“œ ë°ì´í„°
+typedef struct Folder  //Æ®¸®³ëµå µ¥ÀÌÅÍ
 {
-    char name;
+    char* name;
     int size;
 }Element;
 
-typedef struct BTrNode //íŠ¸ë¦¬êµ¬ì¡° ìƒì„±
+typedef struct BTrNode //Æ®¸®±¸Á¶ »ı¼º
 {
     Element data;
     struct BTrNode* left;
     struct BTrNode* right;    
 }TNode;
 
-TNode* Queue[];       //ë ˆë²¨ ìˆœíšŒë¥¼ ìœ„í•œ í ìƒì„±
+TNode* Queue[10];       //·¹º§ ¼øÈ¸¸¦ À§ÇÑ Å¥ »ı¼º
 
-void EnQueue(TNode* n) //í ì‚½ì…
+void EnQueue(TNode* n) //Å¥ »ğÀÔ
 {
     int i;
     while (1)
     {
-        if(Queue[i] != 0) i++;
+        if(Queue[i] != NULL) i++;
         else
         {
             Queue[i] = n;
@@ -32,23 +31,23 @@ void EnQueue(TNode* n) //í ì‚½ì…
     }    
 }
 
-TNode* root = NULL;     //ë£¨íŠ¸ë…¸ë“œ í¬ì¸í„°ë³€ìˆ˜
+TNode* root = NULL;     //·çÆ®³ëµå Æ÷ÀÎÅÍº¯¼ö
 
-void init_tree() {root = NULL;} //ì´ˆê¸°í™”
+void init_tree() {root = NULL;} //ÃÊ±âÈ­
 
-int is_empty()              //ê³µë°± í™•ì¸
+int is_empty()              //°ø¹é È®ÀÎ
 {
     if(root == NULL) return 1;
     else return 0;
 }
 
-int count_node(TNode* n)        //ë…¸ë“œ ê°¯ìˆ˜í™•ì¸
+int count_node(TNode* n)        //³ëµå °¹¼öÈ®ÀÎ
 {
     if(n == NULL) return 0;
     return 1 + count_node(n->left) + count_node(n->right);
 }
 
-TNode* creat_tree(char name, int size, TNode* l, TNode* r) //ë…¸ë“œ ìƒì„±
+TNode* creat_tree(char* name, int size, TNode* l, TNode* r) //³ëµå »ı¼º
 {
     Element val;
     val.name = name;
@@ -60,9 +59,9 @@ TNode* creat_tree(char name, int size, TNode* l, TNode* r) //ë…¸ë“œ ìƒì„±
     return n;
 } 
 
-void level_order()           //ë ˆë²¨ ìˆœíšŒë¡œ ë°°ì—´ì— ì €ì¥
+void level_order()           //·¹º§ ¼øÈ¸·Î ¹è¿­¿¡ ÀúÀå
 {
-    if(is_empty() == 1) printf("ë°ì´í„° ì—†ìŒ\n");
+    if(is_empty() == 1) printf("µ¥ÀÌÅÍ ¾øÀ½\n");
     else
     {
         EnQueue(root);
@@ -75,20 +74,25 @@ void level_order()           //ë ˆë²¨ ìˆœíšŒë¡œ ë°°ì—´ì— ì €ì¥
     }
 }
 
-TNode* search_node(char f)      //nameë°ì´í„°ë¡œ ë…¸ë“œ íƒìƒ‰
+TNode* search_node(char* f)      //nameµ¥ÀÌÅÍ·Î ³ëµå Å½»ö
 {
-    if(is_empty() == 1) printf("ë°ì´í„° ì—†ìŒ\n");
+    TNode* s;
+    if(is_empty() == 1) printf("µ¥ÀÌÅÍ ¾øÀ½\n");
     else
     {
-        //level_order();
         for (int i = 0; i < count_node(root); i++)
         {
-            if(Queue[i]->data.name == f) return Queue[i];   
+            if(Queue[i]->data.name == f)
+            {
+                s = Queue[i];
+                break;
+            } 
         }
+        return s;
     }
 }
 
-int calc_size(TNode* n)         //ìì‹ ì„ í¬í•¨í•œ í•˜ìœ„ë…¸ë“œì˜ size í•©ì‚°
+int calc_size(TNode* n)         //ÀÚ½ÅÀ» Æ÷ÇÔÇÑ ÇÏÀ§³ëµåÀÇ size ÇÕ»ê
 {
     if (n == NULL) return 0;
     return n->data.size + calc_size(n->left) + calc_size(n->right);   
@@ -96,20 +100,21 @@ int calc_size(TNode* n)         //ìì‹ ì„ í¬í•¨í•œ í•˜ìœ„ë…¸ë“œì˜ size í•©ì‚
 
 int main()
 {
-    TNode *a, *b, *c, *d, *e, *f, *g, *h;
-    h = creat_tree("ì™¸êµ­", 700, NULL, NULL);
-    g = creat_tree("í•œêµ­", 400, NULL, NULL);
-    f = creat_tree("ë™ì˜ìƒ", 500, NULL, NULL);
-    e = creat_tree("ì‚¬ì§„", 150, NULL, NULL);
-    d = creat_tree("í´ë˜ì‹", 300, NULL, NULL);
+    TNode *a, *b, *c, *d, *e, *f, *g, *h;       //Æ®¸®³ëµå µ¥ÀÌÅÍ »ı¼º/»ğÀÔ
+    h = creat_tree("¿Ü±¹", 700, NULL, NULL);
+    g = creat_tree("ÇÑ±¹", 400, NULL, NULL);
+    f = creat_tree("µ¿¿µ»ó", 500, NULL, NULL);
+    e = creat_tree("»çÁø", 150, NULL, NULL);
+    d = creat_tree("Å¬·¡½Ä", 300, NULL, NULL);
     c = creat_tree("POP", 0, g, h);
-    b = creat_tree("ê·¸ë¦¼", 70, e, f);
-    a = creat_tree("ìŒì•…", 100, c, d);
-    root = creat_tree("ë‚´ íŒŒì¼", 50, a, b);
+    b = creat_tree("±×¸²", 70, e, f);
+    a = creat_tree("À½¾Ç", 100, c, d);
+    root = creat_tree("³» ÆÄÀÏ", 50, a, b);
+    level_order();
 
-    printf("ë‚´ íŒŒì¼ì˜ ì „ì²´ ìš©ëŸ‰ì€ %dKBì´ë‹¤.\n", calc_size(root));
-    printf("POP íŒŒì¼ì˜ ìš©ëŸ‰ì€ %dKBì´ë‹¤.\n", calc_size(c));
-    printf("ë™ì˜ìƒ íŒŒì¼ì˜ ìš©ëŸ‰ì€ %dKBì´ë‹¤.\n", calc_size(f));
-    printf("íŒŒì¼ì˜ ì´ ê°œìˆ˜ëŠ” %dê°œì´ë‹¤.\n", count_node(root));
-    printf("ìŒì•… íŒŒì¼ì´í•˜ì˜ íŒŒì¼ ê°œìˆ˜ëŠ” %dê°œ ì´ë‹¤.", count_node(a));
+    printf("%s ÆÄÀÏÀÇ ¿ë·®Àº %dKBÀÌ´Ù\n", c->data.name, calc_size(search_node("POP")));
+    printf("%s ÆÄÀÏÀÇ ¿ë·®Àº %dKBÀÌ´Ù\n", f->data.name, calc_size(search_node("µ¿¿µ»ó")));  
+    printf("³» ÆÄÀÏÀÇ ÀüÃ¼ ¿ë·®Àº %dKBÀÌ´Ù.\n", calc_size(root));
+    printf("%s ÆÄÀÏÀÇ ÇÏÀ§ ÆÄÀÏ¼ö´Â %d°³ÀÌ´Ù\n", a->data.name, count_node(search_node("À½¾Ç"))-1);
+    printf("³» ÆÄÀÏÀÇ ÇÏÀ§ ÆÄÀÏ¼ö´Â %d°³ÀÌ´Ù.\n", count_node(root)-1);
 }
